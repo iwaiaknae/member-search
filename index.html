@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>会員検索</title>
+</head>
+<body>
+  <h2>会員検索</h2>
+  <input type="text" id="query" placeholder="名前・フリガナ・会員番号">
+  <br><br>
+  <input type="password" id="pwd" placeholder="パスワード（詳細表示用）">
+  <br><br>
+  <button onclick="search()">検索</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function search() {
+      const query = document.getElementById("query").value;
+      const pwd = document.getElementById("pwd").value;
+      const url = `https://script.google.com/macros/s/AKfycbxUoaQKMPpdT3qAAJTk9jPZPPB9EKWHJnv_EekGVGCYS2v12GRCfiPHi7SyNfiMfXjL/exec?q=${encodeURIComponent(query)}&pwd=${encodeURIComponent(pwd)}`;
+
+
+      const res = await fetch(url);
+      const data = await res.json();
+
+      const result = document.getElementById("result");
+      result.innerHTML = "";
+
+      if (data.length === 0) {
+        result.innerHTML = "一致する会員が見つかりませんでした。";
+        return;
+      }
+
+      data.forEach(item => {
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <hr>
+          <strong>会員番号：</strong>${item.会員番号}<br>
+          <strong>名前：</strong>${item.姓} ${item.名}<br>
+          <strong>フリガナ：</strong>${item.姓フリガナ} ${item.名フリガナ}<br>
+        `;
+        result.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
