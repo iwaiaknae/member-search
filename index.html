@@ -1,17 +1,64 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>会員検索</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      background: #f9f9f9;
+    }
+    h2 {
+      text-align: center;
+      font-size: 1.8em;
+      margin-bottom: 1em;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      font-size: 1.2em;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      width: 100%;
+      font-size: 1.2em;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #result {
+      margin-top: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .entry {
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+  </style>
 </head>
 <body>
   <h2>会員検索</h2>
   <input type="text" id="query" placeholder="名前・フリガナ・会員番号">
-  <br><br>
   <input type="password" id="pwd" placeholder="パスワード（詳細表示用）">
-  <br><br>
-  <button onclick="search()">検索</button>
-
+  <button onclick="search()">🔍 検索</button>
   <div id="result"></div>
 
   <script>
@@ -19,7 +66,6 @@
       const query = document.getElementById("query").value;
       const pwd = document.getElementById("pwd").value;
       const url = `https://script.google.com/macros/s/AKfycbxUoaQKMPpdT3qAAJTk9jPZPPB9EKWHJnv_EekGVGCYS2v12GRCfiPHi7SyNfiMfXjL/exec?q=${encodeURIComponent(query)}&pwd=${encodeURIComponent(pwd)}`;
-
 
       const res = await fetch(url);
       const data = await res.json();
@@ -34,11 +80,13 @@
 
       data.forEach(item => {
         const div = document.createElement("div");
+        div.className = "entry";
         div.innerHTML = `
-          <hr>
           <strong>会員番号：</strong>${item.会員番号}<br>
           <strong>名前：</strong>${item.姓} ${item.名}<br>
           <strong>フリガナ：</strong>${item.姓フリガナ} ${item.名フリガナ}<br>
+          ${item.電話番号 ? `<strong>電話番号：</strong>${item.電話番号}<br>` : ""}
+          ${item.住所 ? `<strong>住所：</strong>${item.住所}<br>` : ""}
         `;
         result.appendChild(div);
       });
